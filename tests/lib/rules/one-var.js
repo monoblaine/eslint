@@ -229,6 +229,317 @@ ruleTester.run("one-var", rule, {
             code: "var a = 1; var b = 2; var x, y; for (var z of foo) {var baz = z; for (var d of baz) {}}",
             options: [{ initialized: "never", uninitialized: "always" }],
             parserOptions: { ecmaVersion: 6 }
+        },
+
+        // https://github.com/eslint/eslint/issues/4680
+        {
+            code: "var a = 0, b = 1; foo(); var c = 2;",
+            options: ["consecutive"]
+        },
+        {
+            code: "var a = 0, b = 1; foo(); var c;",
+            options: ["consecutive"]
+        },
+        {
+            code: "var a, b; foo(); var c = 2;",
+            options: ["consecutive"]
+        },
+        {
+            code: "var a, b; foo(); var c;",
+            options: ["consecutive"]
+        },
+        {
+            code: "let a = 0, b = 1; foo(); let c = 2;",
+            options: ["consecutive"],
+            parserOptions: { ecmaVersion: 6 }
+        },
+        {
+            code: "let a = 0, b = 1; foo(); let c;",
+            options: ["consecutive"],
+            parserOptions: { ecmaVersion: 6 }
+        },
+        {
+            code: "let a, b; foo(); let c = 2;",
+            options: ["consecutive"],
+            parserOptions: { ecmaVersion: 6 }
+        },
+        {
+            code: "let a, b; foo(); let c;",
+            options: ["consecutive"],
+            parserOptions: { ecmaVersion: 6 }
+        },
+        {
+            code: "const a = 0, b = 1; foo(); const c = 2;",
+            options: ["consecutive"],
+            parserOptions: { ecmaVersion: 6 }
+        },
+        {
+            code: "const a = 0; var b;",
+            options: ["consecutive"],
+            parserOptions: { ecmaVersion: 6 }
+        },
+        {
+            code: "const a = 0; let b;",
+            options: ["consecutive"],
+            parserOptions: { ecmaVersion: 6 }
+        },
+        {
+            code: "let a = 0, b; var c = 2, d;",
+            options: ["consecutive"],
+            parserOptions: { ecmaVersion: 6 }
+        },
+        {
+            code: "var a = 0, b; foo(); var c = 1;",
+            options: [{ var: "consecutive" }],
+        },
+        {
+            code: "const a = 0, b = 1; var c = 2, d; foo(); var e = 3;",
+            options: [{ var: "consecutive", const: "always" }],
+            parserOptions: { ecmaVersion: 6 }
+        },
+        {
+            code: "const a = 0; const b = 1; var c = 2, d; foo(); var e = 3;",
+            options: [{ var: "consecutive", const: "never" }],
+            parserOptions: { ecmaVersion: 6 }
+        },
+        {
+            code: "const a = 0, b = 1; var c = 2, d; foo(); const e = 3; var f = 4;",
+            options: [{ var: "consecutive", const: "consecutive" }],
+            parserOptions: { ecmaVersion: 6 }
+        },
+        {
+            code: "let a = 0, b; var c = 1, d; foo(); var e = 2;",
+            options: [{ var: "consecutive", let: "always" }],
+            parserOptions: { ecmaVersion: 6 }
+        },
+        {
+            code: "let a = 0; let b; var c = 1, d; foo(); var e = 2;",
+            options: [{ var: "consecutive", let: "never" }],
+            parserOptions: { ecmaVersion: 6 }
+        },
+        {
+            code: "let a = 0, b; var c = 1, d; foo(); let e = 2; var f = 3;",
+            options: [{ var: "consecutive", let: "consecutive" }],
+            parserOptions: { ecmaVersion: 6 }
+        },
+        {
+            code: "const a = 0, b = 1; foo(); const c = 2;",
+            options: [{ const: "consecutive" }],
+            parserOptions: { ecmaVersion: 6 }
+        },
+        {
+            code: "const a = 0, b = 1; var c = 2, d; foo(); const e = 3;",
+            options: [{ const: "consecutive", var: "always" }],
+            parserOptions: { ecmaVersion: 6 }
+        },
+        {
+            code: "var a = 1; var b = 2; const c = 3, d = 4; foo(); const e = 5;",
+            options: [{ const: "consecutive", var: "never" }],
+            parserOptions: { ecmaVersion: 6 }
+        },
+        {
+            code: "const a = 0, b = 1; var c = 2, d; foo(); const e = 3; var f = 4;",
+            options: [{ const: "consecutive", var: "consecutive" }],
+            parserOptions: { ecmaVersion: 6 }
+        },
+        {
+            code: "const a = 0, b = 1; let c = 2, d; foo(); const e = 3;",
+            options: [{ const: "consecutive", let: "always" }],
+            parserOptions: { ecmaVersion: 6 }
+        },
+        {
+            code: "let a = 1; let b = 2; const c = 3, d = 4; foo(); const e = 5;",
+            options: [{ const: "consecutive", let: "never" }],
+            parserOptions: { ecmaVersion: 6 }
+        },
+        {
+            code: "const a = 0, b = 1; let c = 2, d; foo(); const e = 3; let f = 4;",
+            options: [{ const: "consecutive", let: "consecutive" }],
+            parserOptions: { ecmaVersion: 6 }
+        },
+        {
+            code: "let a = 0, b; foo(); let c = 1;",
+            options: [{ let: "consecutive" }],
+            parserOptions: { ecmaVersion: 6 }
+        },
+        {
+            code: "const a = 0, b = 1; let c = 2, d; foo(); let e = 3;",
+            options: [{ let: "consecutive", const: "always" }],
+            parserOptions: { ecmaVersion: 6 }
+        },
+        {
+            code: "const a = 0; const b = 1; let c = 2, d; foo(); let e = 3;",
+            options: [{ let: "consecutive", const: "never" }],
+            parserOptions: { ecmaVersion: 6 }
+        },
+        {
+            code: "const a = 0, b = 1; let c = 2, d; foo(); const e = 3; let f = 4;",
+            options: [{ let: "consecutive", const: "consecutive" }],
+            parserOptions: { ecmaVersion: 6 }
+        },
+        {
+            code: "var a = 0, b; let c = 1, d; foo(); let e = 2;",
+            options: [{ let: "consecutive", var: "always" }],
+            parserOptions: { ecmaVersion: 6 }
+        },
+        {
+            code: "var a = 0; var b; let c = 1, d; foo(); let e = 2;",
+            options: [{ let: "consecutive", var: "never" }],
+            parserOptions: { ecmaVersion: 6 }
+        },
+        {
+            code: "var a = 0, b; let c = 1, d; foo(); var e = 2; let f = 3;",
+            options: [{ let: "consecutive", var: "consecutive" }],
+            parserOptions: { ecmaVersion: 6 }
+        },
+        {
+            code: "var a = 0, b; const c = 1, d = 2; let e = 3, f; foo(); var g = 4; const h = 5; let i = 6;",
+            options: [{ var: "consecutive", const: "consecutive", let: "consecutive" }],
+            parserOptions: { ecmaVersion: 6 }
+        },
+        {
+            code: "var a; var b = 1; var c;",
+            options: [{ initialized: "consecutive", uninitialized: "always" }]
+        },
+        {
+            code: "var a, b; var c = 2, d = 3;",
+            options: [{ initialized: "consecutive", uninitialized: "always" }]
+        },
+        {
+            code: "var a = 0; var b; var c = 2;",
+            options: [{ initialized: "consecutive", uninitialized: "always" }]
+        },
+        {
+            code: "var a = 0, b = 1; var c; var d = 3;",
+            options: [{ initialized: "consecutive", uninitialized: "always" }]
+        },
+        {
+            code: "var a; var b = 1; var c;",
+            options: [{ initialized: "consecutive", uninitialized: "never" }]
+        },
+        {
+            code: "var a = 0, b = 1; var c; var d = 2;",
+            options: [{ initialized: "consecutive", uninitialized: "never" }]
+        },
+        {
+            code: "var a = 0, b = 1; foo(); var d = 2;",
+            options: [{ initialized: "consecutive", uninitialized: "never" }]
+        },
+        {
+            code: "var a = 0, b = 1; foo(); var c; var d;",
+            options: [{ initialized: "consecutive", uninitialized: "never" }]
+        },
+        {
+            code: "var a = 0; var b; var c = 2;",
+            options: [{ initialized: "always", uninitialized: "consecutive" }]
+        },
+        {
+            code: "var a = 0, b = 1; var c, d;",
+            options: [{ initialized: "always", uninitialized: "consecutive" }]
+        },
+        {
+            code: "var a; var b = 1; var c;",
+            options: [{ initialized: "always", uninitialized: "consecutive" }]
+        },
+        {
+            code: "var a, b; var c = 2; var d;",
+            options: [{ initialized: "always", uninitialized: "consecutive" }]
+        },
+        {
+            code: "var a = 0; var b; var c = 2;",
+            options: [{ initialized: "never", uninitialized: "consecutive" }]
+        },
+        {
+            code: "var a, b; var c = 2; var d;",
+            options: [{ initialized: "never", uninitialized: "consecutive" }]
+        },
+        {
+            code: "var a, b; foo(); var d;",
+            options: [{ initialized: "never", uninitialized: "consecutive" }]
+        },
+        {
+            code: "var a, b; foo(); var c = 2; var d = 3;",
+            options: [{ initialized: "never", uninitialized: "consecutive" }]
+        },
+        {
+            code: "let a; let b = 1; let c;",
+            options: [{ initialized: "consecutive", uninitialized: "always" }],
+            parserOptions: { ecmaVersion: 6 }
+        },
+        {
+            code: "let a, b; let c = 2, d = 3;",
+            options: [{ initialized: "consecutive", uninitialized: "always" }],
+            parserOptions: { ecmaVersion: 6 }
+        },
+        {
+            code: "let a = 0; let b; let c = 2;",
+            options: [{ initialized: "consecutive", uninitialized: "always" }],
+            parserOptions: { ecmaVersion: 6 }
+        },
+        {
+            code: "let a = 0, b = 1; let c; let d = 3;",
+            options: [{ initialized: "consecutive", uninitialized: "always" }],
+            parserOptions: { ecmaVersion: 6 }
+        },
+        {
+            code: "let a; let b = 1; let c;",
+            options: [{ initialized: "consecutive", uninitialized: "never" }],
+            parserOptions: { ecmaVersion: 6 }
+        },
+        {
+            code: "let a = 0, b = 1; let c; let d = 2;",
+            options: [{ initialized: "consecutive", uninitialized: "never" }],
+            parserOptions: { ecmaVersion: 6 }
+        },
+        {
+            code: "let a = 0, b = 1; foo(); let d = 2;",
+            options: [{ initialized: "consecutive", uninitialized: "never" }],
+            parserOptions: { ecmaVersion: 6 }
+        },
+        {
+            code: "let a = 0, b = 1; foo(); let c; let d;",
+            options: [{ initialized: "consecutive", uninitialized: "never" }],
+            parserOptions: { ecmaVersion: 6 }
+        },
+        {
+            code: "let a = 0; let b; let c = 2;",
+            options: [{ initialized: "always", uninitialized: "consecutive" }],
+            parserOptions: { ecmaVersion: 6 }
+        },
+        {
+            code: "let a = 0, b = 1; let c, d;",
+            options: [{ initialized: "always", uninitialized: "consecutive" }],
+            parserOptions: { ecmaVersion: 6 }
+        },
+        {
+            code: "let a; let b = 1; let c;",
+            options: [{ initialized: "always", uninitialized: "consecutive" }],
+            parserOptions: { ecmaVersion: 6 }
+        },
+        {
+            code: "let a, b; let c = 2; let d;",
+            options: [{ initialized: "always", uninitialized: "consecutive" }],
+            parserOptions: { ecmaVersion: 6 }
+        },
+        {
+            code: "let a = 0; let b; let c = 2;",
+            options: [{ initialized: "never", uninitialized: "consecutive" }],
+            parserOptions: { ecmaVersion: 6 }
+        },
+        {
+            code: "let a, b; let c = 2; let d;",
+            options: [{ initialized: "never", uninitialized: "consecutive" }],
+            parserOptions: { ecmaVersion: 6 }
+        },
+        {
+            code: "let a, b; foo(); let d;",
+            options: [{ initialized: "never", uninitialized: "consecutive" }],
+            parserOptions: { ecmaVersion: 6 }
+        },
+        {
+            code: "let a, b; foo(); let c = 2; let d = 3;",
+            options: [{ initialized: "never", uninitialized: "consecutive" }],
+            parserOptions: { ecmaVersion: 6 }
         }
     ],
     invalid: [
@@ -589,6 +900,88 @@ ruleTester.run("one-var", rule, {
                 line: 1,
                 column: 53
             }]
-        }
+        },
+
+        // https://github.com/eslint/eslint/issues/4680
+        {
+            code: "var a = 0, b = 1; var c = 2;",
+            options: ["consecutive"],
+            errors: [{
+                message: "Combine this with the previous 'var' statement.",
+                type: "VariableDeclaration",
+                line: 1,
+                column: 19
+            }]
+        },
+        {
+            code: "let a = 0, b = 1; let c = 2;",
+            options: ["consecutive"],
+            parserOptions: { ecmaVersion: 6 },
+            errors: [{
+                message: "Combine this with the previous 'let' statement.",
+                type: "VariableDeclaration",
+                line: 1,
+                column: 19
+            }]
+        },
+        {
+            code: "const a = 0, b = 1; const c = 2;",
+            options: ["consecutive"],
+            parserOptions: { ecmaVersion: 6 },
+            errors: [{
+                message: "Combine this with the previous 'const' statement.",
+                type: "VariableDeclaration",
+                line: 1,
+                column: 21
+            }]
+        },
+        {
+            code: "const a = 0; let b = 1; let c;",
+            options: ["consecutive"],
+            parserOptions: { ecmaVersion: 6 },
+            errors: [{
+                message: "Combine this with the previous 'let' statement.",
+                type: "VariableDeclaration",
+                line: 1,
+                column: 25
+            }]
+        },
+        {
+            code: "const a = 0; const d = 2; let b = 1; let c;",
+            options: ["consecutive"],
+            parserOptions: { ecmaVersion: 6 },
+            errors: [{
+                message: "Combine this with the previous 'const' statement.",
+                type: "VariableDeclaration",
+                line: 1,
+                column: 14
+            },
+            {
+                message: "Combine this with the previous 'let' statement.",
+                type: "VariableDeclaration",
+                line: 1,
+                column: 38
+            }]
+        },
+        {
+            code: "var a = 0, b = 1; var c = 2;",
+            options: [{ initialized: "consecutive", uninitialized: "always" }],
+            errors: [{
+                message: "Combine this with the previous 'var' statement with initialized variables.",
+                type: "VariableDeclaration",
+                line: 1,
+                column: 19
+            }]
+        },
+        // {
+        //     code: "var a = 0; b = 1; var c; var d;",
+        //     options: [{ initialized: "consecutive", uninitialized: "always" }],
+        //     errors: [{
+        //         message: "Combine this with the previous 'var' statement with uninitialized variables.",
+        //         type: "VariableDeclaration",
+        //         line: 1,
+        //         column: 19
+        //     }]
+        // },
     ]
 });
