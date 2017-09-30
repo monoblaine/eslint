@@ -100,6 +100,23 @@ describe("Linter", () => {
                 linter.verify(code, config, filename, true);
             }, "Intentional error.");
         });
+
+        it("does not call rule listeners with a `this` value", () => {
+            const spy = sandbox.spy();
+
+            linter.defineRule("checker", () => ({ Program: spy }));
+            linter.verify("foo", { rules: { checker: "error" } });
+            assert(spy.calledOnce);
+            assert.strictEqual(spy.firstCall.thisValue, void 0);
+        });
+
+        it("does not allow listeners to use special EventEmitter values", () => {
+            const spy = sandbox.spy();
+
+            linter.defineRule("checker", () => ({ newListener: spy }));
+            linter.verify("foo", { rules: { checker: "error", "no-undef": "error" } });
+            assert(spy.notCalled);
+        });
     });
 
     describe("context.getSourceLines()", () => {
@@ -2828,6 +2845,25 @@ describe("Linter", () => {
 
             linter.verify(code, config, { allowInlineConfig: false });
             assert(ok);
+        });
+    });
+
+    describe("reportUnusedDisable option", () => {
+        it("reports problems for unused eslint-disable comments", () => {
+            assert.deepEqual(
+                linter.verify("/* eslint-disable */", {}, { reportUnusedDisableDirectives: true }),
+                [
+                    {
+                        ruleId: null,
+                        message: "Unused eslint-disable directive (no problems were reported).",
+                        line: 1,
+                        column: 1,
+                        severity: 2,
+                        source: null,
+                        nodeType: null
+                    }
+                ]
+            );
         });
     });
 
